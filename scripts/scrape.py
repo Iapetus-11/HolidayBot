@@ -5,16 +5,20 @@ import pydantic
 import json
 import calendar
 
+
 class Holiday(pydantic.BaseModel):
     at: datetime
     name: str
     link: pydantic.HttpUrl | None
 
+
 MONTHS = {month: index for index, month in enumerate(calendar.month_name) if month}
 YEAR = 2022
 
+
 def construct_dt(month_name: str, day: str) -> datetime:
     return datetime(YEAR, MONTHS[month_name], int(day))
+
 
 def parse_holiday_box(month_name: str, e: bs4.element.Tag) -> Holiday:
     day_no = e.find(class_="holiday-day", recursive=True).string
@@ -25,6 +29,7 @@ def parse_holiday_box(month_name: str, e: bs4.element.Tag) -> Holiday:
     href = ("https://www.calendarr.com" + name_e["href"]) if name_e.has_key("href") else None
 
     return Holiday(at=construct_dt(month_name, day_no), name=name, link=href)
+
 
 def parse(soup: bs4.BeautifulSoup) -> list[Holiday]:
     col = soup.find(class_="holidays-box-col2")
@@ -41,9 +46,12 @@ def parse(soup: bs4.BeautifulSoup) -> list[Holiday]:
             holiday_month = e.string
 
         if e.has_attr("class") and e["class"][0] == "row":
-            holidays.extend([parse_holiday_box(holiday_month, x) for x in e.find_all(class_="list-holiday-box")])
+            holidays.extend(
+                [parse_holiday_box(holiday_month, x) for x in e.find_all(class_="list-holiday-box")]
+            )
 
     return holidays
+
 
 def main():
     html = requests.get("https://www.calendarr.com/united-states/observances-2022/").text
