@@ -1,12 +1,12 @@
 from discord.ext import commands
 
 from bot.utils.code import execute_code, format_exception
-from bot.my_bot import MyBot
+from bot.holiday_bot import HolidayBot
 from bot.cogs.core.database import Database
 
 
 class OwnerCommands(commands.Cog):
-    def __init__(self, bot: MyBot):
+    def __init__(self, bot: HolidayBot):
         self.bot = bot
 
     @property
@@ -32,5 +32,5 @@ class OwnerCommands(commands.Cog):
             await ctx.reply(f"```py\n{format_exception(e)[:2000-9].replace('```', '｀｀｀')}```")
 
 
-async def setup(bot: MyBot):
+async def setup(bot: HolidayBot):
     await bot.add_cog(OwnerCommands(bot))

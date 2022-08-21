@@ -3,13 +3,14 @@ import aiosqlite
 import arrow
 import discord
 from discord.ext import commands
+from bot.models.holiday import Holiday
 from bot.utils.setup import setup_logging
 
 from bot.config import BotConfig
 
 
-class MyBot(commands.AutoShardedBot):
-    def __init__(self, config: BotConfig):
+class HolidayBot(commands.AutoShardedBot):
+    def __init__(self, config: BotConfig, holidays: list[Holiday]):
         super().__init__(
             case_insensitive=True,
             help_command=None,
@@ -18,6 +19,7 @@ class MyBot(commands.AutoShardedBot):
         )
 
         self.config = config
+        self.holidays = holidays
 
         self.logger = setup_logging()
 
@@ -28,7 +30,8 @@ class MyBot(commands.AutoShardedBot):
         self.cog_list = [
             "core.events",
             "core.database",
-            "commands.hello",
+            "commands.owner",
+            "commands.holiday",
         ]
 
     async def start(self) -> None:
@@ -43,7 +46,7 @@ class MyBot(commands.AutoShardedBot):
 
     async def on_ready(self) -> None:
         self.logger.info("Syncing slash commands...")
-        await self.tree.sync()
+        await self.tree.sync(guild=self.get_guild(641117791272960031))
         self.logger.info("Synced slash commands!")
 
     def default_embed(self) -> discord.Embed:
@@ -51,6 +54,6 @@ class MyBot(commands.AutoShardedBot):
 
         embed.timestamp = arrow.utcnow().datetime
 
-        embed.set_footer(text="MyBot", icon_url=self.user.avatar.url)
+        embed.set_footer(text="HolidayBot • /help for help!", icon_url=self.user.avatar.url)
 
         return embed

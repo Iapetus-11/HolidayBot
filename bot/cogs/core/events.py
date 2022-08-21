@@ -1,12 +1,12 @@
 import arrow
 from discord.ext import commands
 
-from bot.my_bot import MyBot
+from bot.holiday_bot import HolidayBot
 from bot.utils.code import format_exception
 
 
 class Events(commands.Cog):
-    def __init__(self, bot: MyBot):
+    def __init__(self, bot: HolidayBot):
         self.bot = bot
 
     @commands.Cog.listener()
@@ -38,5 +38,5 @@ class Events(commands.Cog):
             await ctx.send(debug_info)
 
 
-async def setup(bot: MyBot):
+async def setup(bot: HolidayBot):
     await bot.add_cog(Events(bot))
