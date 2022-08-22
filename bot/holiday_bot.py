@@ -14,7 +14,7 @@ class HolidayBot(commands.AutoShardedBot):
         super().__init__(
             case_insensitive=True,
             help_command=None,
-            intents=discord.Intents.all(),
+            intents=discord.Intents.default(),
             command_prefix=config.COMMAND_PREFIX,
         )
 
@@ -46,7 +46,7 @@ class HolidayBot(commands.AutoShardedBot):
 
     async def on_ready(self) -> None:
         self.logger.info("Syncing slash commands...")
-        await self.tree.sync(guild=self.get_guild(641117791272960031))
+        await self.tree.sync()
         self.logger.info("Synced slash commands!")
 
     def default_embed(self) -> discord.Embed:
