@@ -27,7 +27,9 @@ class HolidayCommands(commands.Cog):
 
         embed = self.bot.default_embed()
         embed.title = "🎁 Today's Holidays 🎉"
-        embed.description ="\n".join([(f"• [{h.name}]({h.link})" if h.link else f"• {h.name}") for h in holidays])
+        embed.description = "\n".join(
+            [(f"• [{h.name}]({h.link})" if h.link else f"• {h.name}") for h in holidays]
+        )
         embed.timestamp = arrow.utcnow().datetime
 
         await inter.response.send_message(embed=embed)
